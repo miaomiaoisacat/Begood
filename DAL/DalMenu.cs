@@ -13,6 +13,7 @@ namespace DAL
             using (var con = ConFactory.CreateMySqlCon())
             {
                 //var aaa = con.Query<Menu>()
+                string a = "aaaa";
             }
         }
     }
