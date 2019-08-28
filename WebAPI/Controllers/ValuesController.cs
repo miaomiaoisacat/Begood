@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DAL;
+using DAL.Appointment;
 using Microsoft.AspNetCore.Mvc;
+using Model.Entities;
+using System.Linq;
 
 namespace WebAPI.Controllers
 {
@@ -15,22 +16,34 @@ namespace WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            DalMenu a = new DalMenu();
-            a.Test();
-            return new string[] { "value1", "value2" };
+            IRepository<Sys> rep = new SysRepository();
+
+            //return new JsonResult(rep.Delete(new Sys { ID = 1, Name = "123" }));
+
+            Sys sys = new Sys();
+
+            return new JsonResult(rep.Delete(new Sys
+            {
+                ID = 1,
+                Name = "123"
+            }));
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            IRepository<Sys> rep = new SysRepository();
+            Sys outModel = rep.SelectSingle(new Sys { ID = id });
+
+            return new JsonResult(outModel);
         }
 
         // POST api/values
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
 
         // PUT api/values/5
