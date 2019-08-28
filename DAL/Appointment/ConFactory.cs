@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Data;
 
-namespace DAL
+namespace DAL.Appointment
 {
     public class ConFactory
     {
