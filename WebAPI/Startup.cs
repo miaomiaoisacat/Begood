@@ -1,9 +1,11 @@
-﻿using DAL.Appointment;
+﻿using DAL;
+using DAL.Appointment;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -19,7 +21,8 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConFactory.Install(Configuration.GetSection("ConnectionString:Mysql").Value);
+            services.AddScoped<IRepository,RepositoryService>()
+            //ConFactory.Install(Configuration.GetSection("ConnectionString:Mysql").Value);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

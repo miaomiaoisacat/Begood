@@ -3,9 +3,9 @@ using Model.Entities;
 
 namespace DAL
 {
-    public class MenuActionRepository : RepositoryBase<MenuAction>
+    public class MenuActionRepository : BaseRepository
     {
-        public MenuActionRepository() : base("menu_action")
+        public MenuActionRepository() : base("menu_action", "")
         {
         }
     }

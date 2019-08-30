@@ -4,18 +4,15 @@ using Model.Entities;
 
 namespace DAL.Appointment
 {
-    public interface IRepository<T> where T: class,new()
+    public interface IRepository
     {
-        bool Create(T model);
-        bool Create(Func<T> func);
-        bool Update(T model);
-        bool Update(Func<T> func);
+        bool Create<T>(T model) where T : class, new();
+        bool Update<T>(T model) where T : class, new();
         bool Delete(int id);
-        bool Delete(T model);
-        bool Delete(Func<T> func);
-        T SelectSingle(T model);
+        bool Delete<T>(T model) where T : class, new();
+        T SelectSingle<T>(T model) where T : class, new();
         List<T> SelectList();
-        List<T> SelectList(T model);
-        List<T> SelectPage(T model);
+        List<T> SelectList<T>(T model) where T : class, new();
+        List<T> SelectPage<T>(T model, int pageIndex,int pageSize) where T : class, new();
     }
 }
