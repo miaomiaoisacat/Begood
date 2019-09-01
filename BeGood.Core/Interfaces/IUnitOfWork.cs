@@ -6,10 +6,9 @@ namespace BeGood.Core.Interfaces
 {
     public interface IUnitOfWork
     {
-        bool Create<T>(T model) where T : class, new();
-        bool Update<T>(T model) where T : class, new();
-        bool Delete<T>(T model) where T : class, new();
-        bool Delete<T>(int id);
+        void Create<T>(T model) where T : class, new();
+        void Update<T>(T model) where T : class, new();
+        void Delete<T>(T model) where T : class, new();
         bool Commit();
     }
 }

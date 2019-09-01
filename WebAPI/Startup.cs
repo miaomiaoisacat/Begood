@@ -1,11 +1,11 @@
-﻿using DAL;
-using DAL.Appointment;
+﻿using BeGood.Core.Interfaces;
+using BeGood.Core.Models.Entities;
+using BeGood.DataMySql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -21,8 +21,10 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IRepository,RepositoryService>()
-            //ConFactory.Install(Configuration.GetSection("ConnectionString:Mysql").Value);
+
+            services.AddScoped<IUnitOfWork<Sys>>(x=> {
+                return new UnitOfWorkMySql<Sys>("sys", Configuration.GetSection("ConnectionString:MySql").Value);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

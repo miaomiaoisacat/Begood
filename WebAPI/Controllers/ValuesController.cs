@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using DAL;
-using DAL.Appointment;
+﻿using System.Collections.Generic;
+using BeGood.Core.Interfaces;
+using BeGood.Core.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Model.Entities;
-using System.Linq;
 
 namespace WebAPI.Controllers
 {
@@ -12,31 +9,32 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IUnitOfWork<Sys> unitOfWork;
+
+        public ValuesController(IUnitOfWork<Sys> unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            IRepository<Sys> rep = new SysRepository();
-
-            //return new JsonResult(rep.Delete(new Sys { ID = 1, Name = "123" }));
-
-            Sys sys = new Sys();
-
-            return new JsonResult(rep.Delete(new Sys
-            {
-                ID = 1,
-                Name = "123"
-            }));
+            return new JsonResult(new Sys { ID = 1, Name = "123" });
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            IRepository<Sys> rep = new SysRepository();
-            Sys outModel = rep.SelectSingle(new Sys { ID = id });
+            Sys s1 = new Sys() { Name = "测试1" };
+            Sys s2 = new Sys() { Name = "测试2" };
 
-            return new JsonResult(outModel);
+            unitOfWork.Create(s1);
+            unitOfWork.Create(s2);
+            bool res = unitOfWork.Commit();
+
+            return new JsonResult(res);
         }
 
         // POST api/values

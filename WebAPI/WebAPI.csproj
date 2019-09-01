@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAL\DAL.csproj" />
-    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\BeGood.Core\BeGood.Core.csproj" />
+    <ProjectReference Include="..\BeGood.DataMySql\BeGood.DataMySql.csproj" />
   </ItemGroup>
 
 </Project>
