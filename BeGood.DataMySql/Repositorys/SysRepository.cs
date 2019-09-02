@@ -2,7 +2,7 @@
 
 namespace BeGood.DataMySql.Repositorys
 {
-    public class SysRepository : BaseRepository
-    {
-    }
+    //public class SysRepository : BaseRepository
+    //{
+    //}
 }

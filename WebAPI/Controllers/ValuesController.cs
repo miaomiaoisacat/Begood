@@ -111,8 +111,8 @@ namespace WebAPI.Controllers
             Sys s1 = new Sys() { Name = "测试1" };
             Sys s2 = new Sys() { Name = "测试2" };
 
-            unitOfWork.Create<Sys>(new Sys { Name = "测试11" }, "sys");
-            unitOfWork.Update<Store>(new Store { ID = 3, Name = "测试分店2" }, "store");
+            unitOfWork.Create<Sys>(new Sys { Name = "测试2" }, "sys");
+            unitOfWork.Update<Store>(new Store { ID = 3, Name = "测试分店222" }, "store");
             bool res = unitOfWork.Commit();
 
             //unitOfWork.Create(s1);

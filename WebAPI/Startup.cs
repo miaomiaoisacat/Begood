@@ -20,13 +20,15 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWorkMySql>(x => {
-                return new UnitOfWorkMySql(Configuration.GetSection("ConnectionString:MySql").Value);
+            services.AddSingleton<IConFactory, ConFactory>(x =>
+            {
+                return new ConFactory(Configuration.GetSection("ConnectionString:MySql").Value);
             });
 
-            //services.AddScoped<IUnitOfWork<Sys>>(x=> {
-            //    return new UnitOfWorkMySql<Sys>("sys", Configuration.GetSection("ConnectionString:MySql").Value);
-            //});
+            services.AddScoped<IUnitOfWork, UnitOfWorkMySql>(x =>
+            {
+                return new UnitOfWorkMySql(x.GetService<IConFactory>());
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

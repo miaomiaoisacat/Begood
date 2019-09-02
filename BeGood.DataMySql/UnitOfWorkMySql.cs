@@ -11,14 +11,14 @@ namespace BeGood.DataMySql
 {
     public class UnitOfWorkMySql : IUnitOfWork
     {
-        private readonly string _conStr;
+        private readonly IConFactory _conFactory;
 
         public List<WorkModel> Works { get; set; }
 
-        public UnitOfWorkMySql(string conStr)
+        public UnitOfWorkMySql(IConFactory conFactory)
         {
-            this._conStr = conStr;
             this.Works = new List<WorkModel>();
+            this._conFactory = conFactory;
         }
 
         public bool Commit()
@@ -27,13 +27,12 @@ namespace BeGood.DataMySql
 
             try
             {
-                using (var con = new MySqlConnection(this._conStr))
+                using (var con = _conFactory.CreateCon())
                 {
                     con.Open();
-                    MySqlTransaction trans = con.BeginTransaction();
+                    IDbTransaction trans = con.BeginTransaction();
                     try
                     {
-
                         foreach (var item in this.Works)
                         {
                             con.Execute(item.SqlBuilder.Invoke(item.Data), item.Data, trans);
