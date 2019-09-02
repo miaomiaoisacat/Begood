@@ -1,22 +1,12 @@
-﻿using MySql.Data.MySqlClient;
+﻿using BeGood.Core.Models;
 using System;
-using System.Text;
 
 namespace BeGood.DataMySql
 {
     public class WorkModel
     {
-        public T aaa;
-
-        public void Install<T>() where T : class, new()
-        {
-
-        }
+        public BaseEntity Data { get; set; }
+        public Type DataType { get; set; }
+        public Func<BaseEntity, string> SqlBuilder { get; set; }
     }
-
-    //public class WorkModel<T> where T : class, new()
-    //{
-    //    public Func<T, string> SqlBuilder { get; set; }
-    //    public T Data { get; set; }
-    //}
 }

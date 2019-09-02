@@ -1,6 +1,6 @@
 ﻿namespace BeGood.Core.Models.Entities
 {
-    public class Store
+    public class Store : BaseEntity
     {
         public int? ID { get; set; } = null;
         public int? ParentID { get; set; } = null;

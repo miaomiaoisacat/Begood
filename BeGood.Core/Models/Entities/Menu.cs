@@ -1,8 +1,7 @@
 ﻿namespace BeGood.Core.Models.Entities
 {
-    public class Menu
+    public class Menu : BaseEntity
     {
-        public Menu() { }
         public int? ID { get; set; } = null;
         public int? ParentID { get; set; } = null;
         public int? SystemID { get; set; } = null;

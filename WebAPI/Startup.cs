@@ -1,5 +1,4 @@
 ﻿using BeGood.Core.Interfaces;
-using BeGood.Core.Models.Entities;
 using BeGood.DataMySql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,10 +20,13 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddScoped<IUnitOfWork<Sys>>(x=> {
-                return new UnitOfWorkMySql<Sys>("sys", Configuration.GetSection("ConnectionString:MySql").Value);
+            services.AddScoped<IUnitOfWork, UnitOfWorkMySql>(x => {
+                return new UnitOfWorkMySql(Configuration.GetSection("ConnectionString:MySql").Value);
             });
+
+            //services.AddScoped<IUnitOfWork<Sys>>(x=> {
+            //    return new UnitOfWorkMySql<Sys>("sys", Configuration.GetSection("ConnectionString:MySql").Value);
+            //});
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

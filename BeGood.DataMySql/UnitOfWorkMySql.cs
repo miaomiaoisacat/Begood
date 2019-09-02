@@ -1,4 +1,5 @@
 ﻿using BeGood.Core.Interfaces;
+using BeGood.Core.Models;
 using Dapper;
 using MySql.Data.MySqlClient;
 using System;
@@ -8,18 +9,16 @@ using System.Text;
 
 namespace BeGood.DataMySql
 {
-    public class UnitOfWorkMySql:IUnitOfWork
+    public class UnitOfWorkMySql : IUnitOfWork
     {
-        private readonly string _tableName;
         private readonly string _conStr;
 
-        public List<WorkModel<T>> Works { get; set; }
+        public List<WorkModel> Works { get; set; }
 
-        public UnitOfWorkMySql(string tableName, string conStr)
+        public UnitOfWorkMySql(string conStr)
         {
-            this._tableName = tableName;
             this._conStr = conStr;
-            this.Works = new List<WorkModel<T>>();
+            this.Works = new List<WorkModel>();
         }
 
         public bool Commit()
@@ -47,6 +46,11 @@ namespace BeGood.DataMySql
                     {
                         trans.Rollback();
                     }
+                    finally
+                    {
+                        if (con.State != ConnectionState.Closed)
+                            con.Close();
+                    }
                 }
             }
             catch (Exception ex)
@@ -56,20 +60,20 @@ namespace BeGood.DataMySql
             return res;
         }
 
-        public void Create(T model)
+        public void Create<T>(T model, string tableName) where T : BaseEntity, new()
         {
-            this.Works.Add(new WorkModel<T>
+            this.Works.Add(new WorkModel
             {
                 Data = model,
-                SqlBuilder = new Func<T, string>(x =>
+                DataType = typeof(T),
+                SqlBuilder = new Func<BaseEntity, string>(x =>
                 {
-
                     var arrProps = typeof(T).GetProperties();
                     StringBuilder builder = new StringBuilder();
                     bool isNeedComma = false;
 
                     builder.Append("insert into ");
-                    builder.Append(this._tableName);
+                    builder.Append(EntityMapper.GetTableName(typeof(T)));
                     builder.Append(" (");
 
                     for (int i = 0; i < arrProps.Length; i++)
@@ -114,19 +118,59 @@ namespace BeGood.DataMySql
             });
         }
 
-        public void Delete(T model)
+        public void Update<T>(T model, string tableName) where T : BaseEntity, new()
         {
-            this.Works.Add(new WorkModel<T>()
+            this.Works.Add(new WorkModel
             {
                 Data = model,
-                SqlBuilder = new Func<T, string>(x =>
+                DataType = typeof(T),
+                SqlBuilder = new Func<BaseEntity, string>(x =>
+                {
+                    var arrProps = typeof(T).GetProperties();
+                    StringBuilder builder = new StringBuilder();
+                    bool isNeedComma = false;
+
+                    builder.Append("update ");
+                    builder.Append(EntityMapper.GetTableName(typeof(T)));
+                    builder.Append(" set ");
+                    for (int i = 0; i < arrProps.Length; i++)
+                    {
+                        if (null == arrProps[i].GetValue(x))
+                            continue;
+                        if (arrProps[i].Name == "ID")
+                            continue;
+
+                        if (isNeedComma)
+                        {
+                            builder.Append(",");
+                            isNeedComma = false;
+                        }
+
+                        builder.Append(arrProps[i].Name);
+                        builder.Append("=@");
+                        builder.Append(arrProps[i].Name);
+                        isNeedComma = true;
+                    }
+                    builder.Append(" where ID=@ID");
+                    return builder.ToString();
+                })
+            });
+        }
+
+        public void Delete<T>(T model, string tableName) where T : BaseEntity, new()
+        {
+            this.Works.Add(new WorkModel
+            {
+                Data = model,
+                DataType = typeof(T),
+                SqlBuilder = new Func<BaseEntity, string>(x =>
                 {
                     var arrProps = typeof(T).GetProperties();
                     StringBuilder builder = new StringBuilder();
                     bool isNeedAnd = false;
 
                     builder.Append("delete from ");
-                    builder.Append(this._tableName);
+                    builder.Append(EntityMapper.GetTableName(typeof(T)));
                     builder.Append(" where ");
 
                     for (int i = 0; i < arrProps.Length; i++)
@@ -149,57 +193,6 @@ namespace BeGood.DataMySql
                     return builder.ToString();
                 })
             });
-        }
-
-        public void Update(T model)
-        {
-            this.Works.Add(new WorkModel<T>
-            {
-                Data = model,
-                SqlBuilder = new Func<T, string>(x =>
-                {
-                    var arrProps = typeof(T).GetProperties();
-                    StringBuilder builder = new StringBuilder();
-                    bool isNeedComma = false;
-
-                    builder.Append("update ");
-                    builder.Append(this._tableName);
-                    builder.Append(" set ");
-                    for (int i = 0; i < arrProps.Length; i++)
-                    {
-                        if (null == arrProps[i].GetValue(x))
-                            continue;
-
-                        if (isNeedComma)
-                        {
-                            builder.Append(",");
-                            isNeedComma = false;
-                        }
-
-                        builder.Append(arrProps[i].Name);
-                        builder.Append("=@");
-                        builder.Append(arrProps[i].Name);
-                        isNeedComma = true;
-                    }
-                    builder.Append(" where ID=@ID");
-                    return builder.ToString();
-                })
-            });
-        }
-
-        public void Create<T>(T model) where T : class, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update<T>(T model) where T : class, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete<T>(T model) where T : class, new()
-        {
-            throw new NotImplementedException();
         }
     }
 }

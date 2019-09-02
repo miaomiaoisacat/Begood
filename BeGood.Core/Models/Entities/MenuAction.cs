@@ -1,6 +1,6 @@
 ﻿namespace BeGood.Core.Models.Entities
 {
-    public class MenuAction
+    public class MenuAction : BaseEntity
     {
         public int? ID { get; set; } = null;
         public int? MenuID { get; set; } = null;
