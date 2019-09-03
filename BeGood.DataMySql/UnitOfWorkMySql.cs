@@ -1,7 +1,6 @@
 ﻿using BeGood.Core.Interfaces;
 using BeGood.Core.Models;
 using Dapper;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,14 +10,11 @@ namespace BeGood.DataMySql
 {
     public class UnitOfWorkMySql : IUnitOfWork
     {
-        private readonly IConFactory _conFactory;
-
         public List<WorkModel> Works { get; set; }
 
-        public UnitOfWorkMySql(IConFactory conFactory)
+        public UnitOfWorkMySql()
         {
             this.Works = new List<WorkModel>();
-            this._conFactory = conFactory;
         }
 
         public bool Commit()
@@ -27,7 +23,7 @@ namespace BeGood.DataMySql
 
             try
             {
-                using (var con = _conFactory.CreateCon())
+                using (var con = ConFactory.CreateCon())
                 {
                     con.Open();
                     IDbTransaction trans = con.BeginTransaction();
@@ -59,7 +55,7 @@ namespace BeGood.DataMySql
             return res;
         }
 
-        public void Create<T>(T model, string tableName) where T : BaseEntity, new()
+        public void Create<T>(T model) where T : BaseEntity, new()
         {
             this.Works.Add(new WorkModel
             {
@@ -117,7 +113,7 @@ namespace BeGood.DataMySql
             });
         }
 
-        public void Update<T>(T model, string tableName) where T : BaseEntity, new()
+        public void Update<T>(T model) where T : BaseEntity, new()
         {
             this.Works.Add(new WorkModel
             {
@@ -156,7 +152,7 @@ namespace BeGood.DataMySql
             });
         }
 
-        public void Delete<T>(T model, string tableName) where T : BaseEntity, new()
+        public void Delete<T>(T model) where T : BaseEntity, new()
         {
             this.Works.Add(new WorkModel
             {
