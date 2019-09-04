@@ -4,7 +4,7 @@ using MySql.Data.MySqlClient;
 
 namespace BeGood.DataMySql
 {
-    public class ConFactory : IConFactory
+    public class ConFactoryMySql : IConFactory
     {
         public string ConStr { get; set; }
 
