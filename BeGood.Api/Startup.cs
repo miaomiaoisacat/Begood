@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace WebAPI
+namespace BeGood.Api
 {
     public class Startup
     {
@@ -22,19 +22,22 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConFactory.ConStr = Configuration.GetSection("ConnectionString:MySql").Value;
+            services.AddSingleton<IConFactory, ConFactory>(x =>
+            {
+                return new ConFactory() { ConStr = this.Configuration.GetSection("ConnectionString:MySql").Value };
+            });
 
             services
                 .AddScoped<IUnitOfWork, UnitOfWorkMySql>()
                 .AddScoped<IMenuRepository, MenuRepository>()
-                .AddScoped<IMenuActionRepository,MenuActionRepository>()
-                .AddScoped<IRoleRepository,RoleRepository>()
-                .AddScoped<IRoleMenuActionRepository,RoleMenuActionRepository>()
-                .AddScoped<IStoreRepository,StoreRepository>()
-                .AddScoped<IStoreSysRepository,StoreSysRepository>()
-                .AddScoped<ISysRepository,SysRepository>()
-                .AddScoped<IUserRepository,UserRepository>()
-                .AddScoped<IUserRoleRepository,UserRoleRepository>();
+                .AddScoped<IMenuActionRepository, MenuActionRepository>()
+                .AddScoped<IRoleRepository, RoleRepository>()
+                .AddScoped<IRoleMenuActionRepository, RoleMenuActionRepository>()
+                .AddScoped<IStoreRepository, StoreRepository>()
+                .AddScoped<IStoreSysRepository, StoreSysRepository>()
+                .AddScoped<ISysRepository, SysRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IUserRoleRepository, UserRoleRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

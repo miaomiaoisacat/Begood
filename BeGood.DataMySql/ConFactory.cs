@@ -1,15 +1,16 @@
 ﻿using System.Data;
+using BeGood.Core.Interfaces;
 using MySql.Data.MySqlClient;
 
 namespace BeGood.DataMySql
 {
-    public static class ConFactory
+    public class ConFactory : IConFactory
     {
-        public static string ConStr { get; set; }
+        public string ConStr { get; set; }
 
-        public static IDbConnection CreateCon()
+        public IDbConnection CreateCon()
         {
-            return new MySqlConnection(ConFactory.ConStr);
+            return new MySqlConnection(this.ConStr);
         }
     }
 }
