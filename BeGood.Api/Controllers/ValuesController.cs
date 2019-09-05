@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BeGood.Api.Filters;
 using BeGood.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

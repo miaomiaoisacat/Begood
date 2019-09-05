@@ -1,4 +1,5 @@
-﻿using BeGood.Core.Interfaces;
+﻿using BeGood.Api.Filters;
+using BeGood.Core.Interfaces;
 using BeGood.Core.Interfaces.Repositories.Bases;
 using BeGood.DataMySql;
 using BeGood.DataMySql.Repositories.Bases;
@@ -39,7 +40,10 @@ namespace BeGood.Api
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IUserRoleRepository, UserRoleRepository>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(x =>
+            {
+                x.Filters.Add<CusAuthorizeFilter>();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +57,7 @@ namespace BeGood.Api
             {
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseMvc();
